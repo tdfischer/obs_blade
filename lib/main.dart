@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:window_manager/window_manager.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
@@ -222,6 +224,9 @@ void main() async {
           ),
         ),
       );
+      windowManager.waitUntilReadyToShow().then((_) async {
+        await windowManager.setAsFrameless();
+      });
     },
     (Object error, StackTrace stack) =>
         _logging('[ERROR][ON] $error\n[STACK]\n$stack'),

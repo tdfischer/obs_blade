@@ -44,7 +44,7 @@ dependencies:
   hive_flutter: ^1.1.0
 
   # To enable unique identifiable objects (models)
-  uuid: ^4.2.1
+  uuid: ^3.0.7
 
   # Enable launching stuff based on URL scheme (Twitter, Browser etc.)
   url_launcher: ^6.2.1
@@ -90,6 +90,11 @@ dependencies:
   # Annotations for the class magic
   freezed_annotation: ^2.4.1
   json_annotation: ^4.8.1
+  window_manager: ^0.3.7
+  twitch_chat:
+    git:
+      url: 'https://github.com/tdfischer/twitch_chat.git'
+      ref: '53325dd3d9670e5d067de9b670b48f7234058fd7'
 
 dev_dependencies:
   flutter_test:

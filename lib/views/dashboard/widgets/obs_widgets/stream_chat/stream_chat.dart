@@ -76,6 +76,11 @@ class _StreamChatState extends State<StreamChat> {
                 defaultValue: ChatType.Twitch,
               );
 
+              print("rebuild hive");
+
+              String? user = username(chatType, settingsBox);
+              String validUser = user == null ? "" : user;
+
               return Stack(
                 alignment: Alignment.center,
                 children: [
@@ -84,11 +89,12 @@ class _StreamChatState extends State<StreamChat> {
                   /// will still eat up performance
                   if (anyChatActive(chatType, settingsBox))
                     if (chatType == ChatType.Twitch)
-                      TwitchChatView()
+                      TwitchChatView(username: validUser, key: Key(validUser))
                     else
                       WebChatView(
                         chatType: chatType,
-                        username: username(chatType, settingsBox)
+                        username: validUser,
+                        key: Key(validUser)
                       )
                   ,
                   if (!anyChatActive(chatType, settingsBox))
@@ -164,21 +170,24 @@ class _ChatLine extends StatelessWidget {
 }
 
 class TwitchChatView extends StatefulWidget {
-  const TwitchChatView({Key? key})
+  final String username;
+  const TwitchChatView({Key? key, required this.username})
       : super(key: key);
 
   @override
-  _TwitchChatState createState() => _TwitchChatState();
+  _TwitchChatState createState() => _TwitchChatState(username: username);
 }
 
 class _TwitchChatState extends State<TwitchChatView> {
+  final String username;
+  _TwitchChatState({required this.username});
   late final TwitchChat _chat;
   late final List<ChatMessage> _history = [];
   StreamController _msgStreamController = StreamController.broadcast();
 
   @override
   void initState() {
-    _chat = TwitchChat.anonymous('tdfischer');
+    _chat = TwitchChat.anonymous(username!);
     _chat.chatStream.listen(
       (evt) => msgHandler(evt),
       onDone: () => print("Stream done"),

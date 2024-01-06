@@ -95,6 +95,8 @@ dependencies:
     git:
       url: 'https://github.com/tdfischer/twitch_chat.git'
       ref: '53325dd3d9670e5d067de9b670b48f7234058fd7'
+  syncfusion_flutter_gauges: ^24.1.44
+  chart_sparkline: ^1.0.14
 
 dev_dependencies:
   flutter_test:

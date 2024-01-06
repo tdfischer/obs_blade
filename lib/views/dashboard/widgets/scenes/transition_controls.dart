@@ -34,13 +34,7 @@ class TransitionControls extends StatelessWidget {
                   ?.toString() ??
               '-');
 
-      return Padding(
-        /// Small hack - not sure why, but without having this vertical padding
-        /// the textfield will kinda cut off its top and bottom border and it
-        /// makes it look weird (especially with the suffix)
-        padding: const EdgeInsets.symmetric(vertical: 1),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+      return Row(
           children: [
             DropdownButton<String?>(
               value: dashboardStore.currentTransition?.transitionName,
@@ -63,9 +57,6 @@ class TransitionControls extends StatelessWidget {
                 {'transitionName': selectedTransition},
               ),
             ),
-            const SizedBox(
-              width: 24.0,
-            ),
             CupertinoNumberTextField(
               width: 112.0,
               minValue: 50,
@@ -76,10 +67,8 @@ class TransitionControls extends StatelessWidget {
               suffix: 'ms',
               onDone: () => _handleSubmit(controller),
             ),
-            const SizedBox(width: 4),
           ],
-        ),
-      );
+        );
     });
   }
 }

@@ -65,6 +65,8 @@ enum EventType {
   /// An input's mute state has changed.
   InputMuteStateChanged,
 
+  InputShowStateChanged,
+
   /// A scene's item list has been reindexed.
   SceneItemListReindexed,
 

@@ -15,6 +15,7 @@ class Input with _$Input {
     List<InputChannel>? inputLevelsMul,
     int? syncOffset,
     @Default(false) bool inputMuted,
+    @Default(true) bool visible,
   }) = _Input;
 
   factory Input.fromJson(Map<String, Object?> json) => _$InputFromJson(json);

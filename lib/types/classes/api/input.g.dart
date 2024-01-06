@@ -17,6 +17,7 @@ _$InputImpl _$$InputImplFromJson(Map<String, dynamic> json) => _$InputImpl(
           .toList(),
       syncOffset: json['syncOffset'] as int?,
       inputMuted: json['inputMuted'] as bool? ?? false,
+      visible: json['visible'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$InputImplToJson(_$InputImpl instance) =>
@@ -29,4 +30,5 @@ Map<String, dynamic> _$$InputImplToJson(_$InputImpl instance) =>
       'inputLevelsMul': instance.inputLevelsMul,
       'syncOffset': instance.syncOffset,
       'inputMuted': instance.inputMuted,
+      'visible': instance.visible,
     };

@@ -27,6 +27,8 @@ enum RequestType {
   /// {'inputName': String } - Name of the input to get the volume of
   GetInputVolume,
 
+  GetInputSettings,
+
   /// Gets the audio mute state of an input.
   ///
   /// {'inputName': String } - Name of input to get the mute state of

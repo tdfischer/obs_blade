@@ -17,6 +17,7 @@ import 'package:obs_blade/types/classes/stream/batch_responses/screenshot.dart';
 import 'package:obs_blade/types/classes/stream/batch_responses/stats.dart';
 import 'package:obs_blade/types/classes/stream/events/current_profile_changed.dart';
 import 'package:obs_blade/types/classes/stream/events/input_mute_state_changed.dart';
+import 'package:obs_blade/types/classes/stream/events/input_show_state_changed.dart';
 import 'package:obs_blade/types/classes/stream/events/profile_list_changed.dart';
 import 'package:obs_blade/types/classes/stream/events/replay_buffer_state_changed.dart';
 import 'package:obs_blade/types/classes/stream/events/transition_duration_changed.dart';
@@ -156,6 +157,11 @@ abstract class _DashboardStore with Store {
         this.allInputs.where((input) => this
             .globalInputNames
             .every((globalInputName) => globalInputName != input.inputName)),
+      );
+
+  @computed
+  ObservableList<Input> get visibleInputs => ObservableList.of(
+        this.allInputs.where((input) => input.visible)
       );
 
   /// "Special" audio inputs produced by global entities like Desktop or Mic
@@ -1148,6 +1154,7 @@ abstract class _DashboardStore with Store {
         GetInputListResponse getInputListResponse =
             GetInputListResponse(response.jsonRAW);
 
+        print("Inputs! " + json.encode(response.jsonRAW));
         this.allInputs = ObservableList.of(getInputListResponse.inputs);
 
         NetworkHelper.makeBatchRequest(

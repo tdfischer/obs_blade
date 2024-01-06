@@ -13,6 +13,8 @@ import '../../../../../../types/classes/api/input.dart';
 import '../../../../../../types/enums/request_type.dart';
 import '../../../../../../utils/network_helper.dart';
 
+import 'package:syncfusion_flutter_gauges/gauges.dart';
+
 class AudioSlider extends StatefulWidget {
   final Input input;
 
@@ -67,6 +69,25 @@ class _AudioSliderState extends State<AudioSlider> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              IconButton(
+                icon: Icon(
+                  this.widget.input.inputMuted
+                      ? Icons.volume_off
+                      : Icons.volume_up,
+                  color: this.widget.input.inputMuted
+                      ? CupertinoColors.destructiveRed
+                      : Theme.of(context).buttonTheme.colorScheme!.primary,
+                ),
+                padding: const EdgeInsets.all(0.0),
+                onPressed: () => NetworkHelper.makeRequest(
+                  networkStore.activeSession!.socket,
+                  RequestType.SetInputMute,
+                  {
+                    'inputName': this.widget.input.inputName,
+                    'inputMuted': !this.widget.input.inputMuted
+                  },
+                ),
+              ),
               Expanded(
                 child: Text(
                   this.widget.input.inputName != null
@@ -75,6 +96,16 @@ class _AudioSliderState extends State<AudioSlider> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+              ),
+              Container(
+                width: 64.0,
+                padding: const EdgeInsets.only(right: 0.0),
+                alignment: Alignment.center,
+                child: Text(((((this.widget.input.inputVolumeMul ?? 0.0) * 100)
+                            .toInt()) /
+                        100)
+                    .toString()
+                    .padRight(4, '0')),
               ),
               HiveBuilder<dynamic>(
                 hiveKey: HiveKeys.Settings,
@@ -108,90 +139,48 @@ class _AudioSliderState extends State<AudioSlider> {
               ),
             ],
           ),
-          const SizedBox(height: 12.0),
-          LayoutBuilder(
-            builder: (_, constraints) => Stack(
-              children: [
-                Container(
-                  height: 4,
-                  width: double.infinity,
-                  color: Theme.of(context).disabledColor,
-                ),
-                if (this.widget.input.inputLevelsMul != null &&
-                    this.widget.input.inputLevelsMul!.isNotEmpty &&
-                    this.widget.input.inputLevelsMul!.first.current! > 0)
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 50),
-                    height: 4,
-                    width: constraints.maxWidth *
-                        _transformMulToLevel(
-                            this.widget.input.inputLevelsMul!.first.current!),
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                if (this.widget.input.inputLevelsMul != null &&
-                    this.widget.input.inputLevelsMul!.isNotEmpty &&
-                    this.widget.input.inputLevelsMul!.first.average! > 0)
-                  AnimatedPositioned(
-                    duration: const Duration(milliseconds: 200),
-                    left: constraints.maxWidth *
-                        _transformMulToLevel(
-                            this.widget.input.inputLevelsMul!.first.average!),
-                    child: Container(
-                      height: 4,
-                      width: 2,
-                      color: Colors.black,
-                    ),
-                  ),
-              ],
-            ),
-          ),
           Row(
             children: [
-              IconButton(
-                icon: Icon(
-                  this.widget.input.inputMuted
-                      ? Icons.volume_off
-                      : Icons.volume_up,
-                  color: this.widget.input.inputMuted
-                      ? CupertinoColors.destructiveRed
-                      : Theme.of(context).buttonTheme.colorScheme!.primary,
-                ),
-                padding: const EdgeInsets.all(0.0),
-                onPressed: () => NetworkHelper.makeRequest(
-                  networkStore.activeSession!.socket,
-                  RequestType.SetInputMute,
-                  {
-                    'inputName': this.widget.input.inputName,
-                    'inputMuted': !this.widget.input.inputMuted
-                  },
-                ),
-              ),
               Expanded(
-                child: Slider(
-                  min: 0.0,
-                  max: 1.0,
-                  value: (this.widget.input.inputVolumeMul ?? 0.0),
-                  activeColor:
-                      Theme.of(context).buttonTheme.colorScheme!.secondary,
-                  onChanged: (volume) => NetworkHelper.makeRequest(
-                      networkStore.activeSession!.socket,
-                      RequestType.SetInputVolume, {
-                    'inputName': this.widget.input.inputName,
-                    'inputVolumeMul': volume,
-                  }),
-                ),
-              ),
-              Container(
-                width: 64.0,
-                padding: const EdgeInsets.only(right: 0.0),
-                alignment: Alignment.center,
-                child: Text(((((this.widget.input.inputVolumeMul ?? 0.0) * 100)
-                            .toInt()) /
-                        100)
-                    .toString()
-                    .padRight(4, '0')),
-              ),
-            ],
+                child: SfLinearGauge(
+                  ranges: [
+                    LinearGaugeRange(
+                      startValue: 0,
+                      endValue: 60,
+                      color: Color.fromARGB(255, 0, 168, 0)
+                    ),
+                    LinearGaugeRange(
+                      startValue: 60,
+                      endValue: 80,
+                      color: Color.fromARGB(255, 168, 154, 0)
+                    ),
+                    LinearGaugeRange(
+                      startValue: 80,
+                      endValue: 100,
+                      color: Color.fromARGB(255, 168, 0, 0)
+                    )
+                  ],
+                  barPointers: [
+                    if (this.widget.input.inputLevelsMul != null &&
+                        this.widget.input.inputLevelsMul!.isNotEmpty)
+                    LinearBarPointer(value: _transformMulToLevel(this.widget.input.inputLevelsMul!.first.current!) * 100)
+                  ],
+                  markerPointers: [
+                    LinearShapePointer(
+                      value: this.widget.input.inputVolumeMul! * 100,
+                      dragBehavior: LinearMarkerDragBehavior.free,
+                      enableAnimation: false,
+                      onChanged: (volume) => NetworkHelper.makeRequest(
+                          networkStore.activeSession!.socket,
+                          RequestType.SetInputVolume, {
+                        'inputName': this.widget.input.inputName,
+                        'inputVolumeMul': volume / 100,
+                      }),
+                    )
+                  ]
+                )
+              )
+            ]
           ),
         ],
       ),

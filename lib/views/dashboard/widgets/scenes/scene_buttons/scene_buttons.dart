@@ -42,24 +42,6 @@ class SceneButtons extends StatelessWidget {
                             scene.sceneName,
                             networkStore.activeSession?.connection.name,
                             networkStore.activeSession?.connection.host)
-                    // {
-                    //   bool isHiddenScene = hiddenSceneInBox.sceneName == scene.name;
-
-                    //   if (isHiddenScene) {
-                    //     if (networkStore.activeSession!.connection.name != null &&
-                    //         hiddenSceneInBox.connectionName != null) {
-                    //       isHiddenScene =
-                    //           networkStore.activeSession!.connection.name ==
-                    //               hiddenSceneInBox.connectionName;
-                    //     } else {
-                    //       isHiddenScene =
-                    //           networkStore.activeSession!.connection.host ==
-                    //               hiddenSceneInBox.host;
-                    //     }
-                    //   }
-
-                    //   return isHiddenScene;
-                    // }
                     ),
               ),
             );
